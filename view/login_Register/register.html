@@ -1,0 +1,227 @@
+<div ng-controller="RegisterController">
+    <script type="text/javascript"> 
+        $(function () {
+            $('#dob').datepicker({ format: 'yyyy-mm-dd',});
+            populateCountries("country", "state"); 
+        });
+    </script>
+    <div class="container">
+        <div class="mainbox col-md-11">
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    <h1 class="title">Firebrick</h1>
+                    <hr />
+                </div>
+            </div>
+            <div class="main-login main-center">
+                <div class="registration_msg" ng-show="msg1" ng-bind-html="msg"></div>
+                <div class="row">
+                    <div class="container">
+                        <form class="" name="reg_form" id="reg_form" ng-init="disabled=false" method="POST" ng-submit="Registration(reg_form)" novalidate enctype="multipart/form-data">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.firstname.$invalid && !reg_form.firstname.$pristine }">
+                                        <label for="name" class="cols-sm-2 control-label">First Name</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter First Name" ng-model="firstname" required />
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.firstname.$invalid && !reg_form.firstname.$pristine" class="help-block">Your name is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.lastname.$invalid && !reg_form.lastname.$pristine }">
+                                        <label for="name" class="cols-sm-2 control-label">Last Name</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last Name" ng-model="lastname" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.lastname.$invalid && !reg_form.lastname.$pristine" class="help-block">Your lastname is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.title.$invalid && !reg_form.title.$pristine }">
+                                        <label for="name" class="cols-sm-2 control-label">Title</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="title" id="title" placeholder="Enter Title" ng-model="title" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.title.$invalid && !reg_form.title.$pristine" class="help-block">Your title is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.email.$invalid && !reg_form.email.$pristine }">
+                                        <label for="email" class="cols-sm-2 control-label">Your Email</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="email" id="email" placeholder="Enter your Email" ng-model="email" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.email.$invalid && !reg_form.email.$pristine" class="help-block">Your email is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.username.$invalid && !reg_form.username.$pristine }">
+                                        <label for="username" class="cols-sm-2 control-label">Username</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Username" ng-model="username" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.username.$invalid && !reg_form.username.$pristine" class="help-block">Your username is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.password.$invalid && !reg_form.password.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">Password</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                                <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" ng-model="password"  minlength='6' required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.password.$invalid && !reg_form.password.$pristine" class="help-block">Your password is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.country.$invalid && !reg_form.country.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">Country</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-globe fa-lg" aria-hidden="true"></i></span>
+                                                <select name='country' id="country" class="form-control" ng-model="country" >
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.country.$invalid && !reg_form.country.$pristine" class="help-block">Your country is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.state.$invalid && !reg_form.state.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">State</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-university fa-lg" aria-hidden="true"></i></span>
+                                                <select name="state" id="state" class="form-control" ng-model="state" >
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.state.$error.required" class="help-block">Your state is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.city.$invalid && !reg_form.city.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">City</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-university fa-lg" aria-hidden="true"></i></span>
+                                                <input type="text" name='city' id="city" class="form-control" ng-model="city" required>                                            
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.city.$invalid && !reg_form.city.$pristine" class="help-block">Your city is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.telephone.$invalid && !reg_form.telephone.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">Telephone</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-phone fa-lg" aria-hidden="true"></i></span>
+                                                <input type="number" class="form-control" name="telephone" id="telephone" placeholder="Enter your telephone" ng-pattern="phoneNumbr" ng-model="telephone" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.telephone.$invalid && reg_form.telephone.$error.pattern" class="help-block">Your Phone is not 10 digit number.</p>
+                                        <p ng-show="reg_form.telephone.$invalid && !reg_form.telephone.$pristine" class="help-block">Your Phone is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.dob.$invalid && !reg_form.dob.$pristine }">
+                                        <label for="password" class="cols-sm-2 control-label">DOB</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-birthday-cake fa-lg" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" name="dob" id="dob" ng-model="dob" required/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.dob.$invalid && !reg_form.dob.$pristine" class="help-block">Your dob is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.file.$invalid && !reg_form.file.$pristine }">
+                                        <label for="profile" class="cols-sm-2 control-label">Profile image</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <input type="file" class="form-control-file" id="file" name="file" ng-model="file" aria-describedby="fileHelp"/>
+                                            </div>
+                                        </div>
+                                        <p ng-show="reg_form.file.$invalid && !reg_form.file.$pristine" class="help-block">Your profile image is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" ng-class="{ 'has-error' : reg_form.user_role.$invalid && !reg_form.user_role.$pristine }">
+                                        <label for="user_role" class="cols-sm-2 control-label">User role</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <select class="form-control" id="user_role" name="user_role"  ng-model="user_role" 
+                                                ng-init="" required>
+                                                <option value="">Please select User role</option>
+                                                <option value="1">Administrator</option>
+                                                <option value="2">Manager</option>
+                                                <option value="3">User</option>
+                                                <option value="4">Viewer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <p ng-show="reg_form.user_role.$invalid && !reg_form.user_role.$pristine" class="help-block">User role is required.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                        <input type="hidden" name="action" ng-model="action" value="registration">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block login-button" ng-disabled="reg_form.$invalid">Register</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+    </div>
+</div>
+</div>

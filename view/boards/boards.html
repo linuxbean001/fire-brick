@@ -1,0 +1,1418 @@
+<div ng-controller="boardController" ng-init="bucket_list_data();bucketdisplaytag();bucketdisplaytag12345();metatag();person_block_data1();tag_block_data1();cus_block_data(); block_user();">
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      $('#datetimepicker1').datepicker();
+      $('#datetimepicker2').datepicker();
+      $('#task_deadline').datepicker({ format: 'yyyy-mm-dd',});
+      $('#task_deadline_time').timepicker();
+      $('#timepicker1').timepicker();
+      $('#task_deadline_time1').timepicker();
+      $('#task_deadline').datepicker();
+      $('#task_deadline1').datepicker({ format: 'yyyy-mm-dd',
+        language: "nl",
+        calendarWeeks: true,
+        todayHighlight: true});
+      $(".collse").click(function(){
+        $('.modal').trigger('click');
+      });
+    });
+  </script>
+  <!-- Add Board -->
+  <div class="modal animated  bounceIn" id="create_board" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Bucket</h4>
+        </div>
+        <div class="modal-body">
+          <div class="registration_msg" ng-show="msg1" ng-bind-html="msg"></div>
+          <form action="javascript:void(0)" name="create_board_form" ng-submit="create_board()" id="create_board_form" method="POST" novalidate>
+            <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : create_board_form.mainboardbucketname.$invalid && !create_board_form.mainboardbucketname.$pristine }">
+                <label for="bucket">Bucket name:</label>
+                <input type="text" class="form-control" id="bucket" placeholder="Enter Bucket name" name="mainboardbucketname" ng-model="main_board.bucketname" required>
+                <p ng-show="create_board_form.mainboardbucketname.$invalid && !create_board_form.mainboardbucketname.$pristine" class="help-block">Bucket name is required.</p>
+              </div>
+            </div>
+            <input type="hidden" name="action" ng-model="action" value="mainboardBucketcreate">
+            <input type="hidden" name="table" value="fb_buckets">
+            <button type="submit" class="btn btn-default" ng-disabled="create_board_form.$invalid">Add Bucket</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Block's -->
+  <div class="modal animated zoomInUp block_content_modal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add new block</h4>
+        </div>
+        <div class="modal-body">
+          <div class="registration_msg" ng-show="msg1" ng-bind-html="msg"></div>
+          <form action="javascript:void(0)" name="Bucket_content_form" id="Bucket_content_form" ng-submit="add_block()" method="POST" novalidate>
+            <div class="row">
+              <div class="tag-right">
+                <div class="row">
+                  <div class="col-md-1" >
+                    <i class="fa fa-external-link"></i>
+                  </div>
+                  <div class="col-md-1" >
+                    <div class="dropdown">
+                      <i class="fa fa-paperclip" data-toggle="dropdown"></i>
+                      <ul class="dropdown-menu">
+                        <li><input type="file" name="edit_file" class="edit_file">Upload File</li>
+                        <li><a href="javascript:void(0)">Attach Link</a></li>
+                        <li><a href="javascript:void(0)">From Google Drive</a></li>
+                        <li><a href="javascript:void(0)">From Dropbox</a></li>
+                        <li><a href="javascript:void(0)">From OneDrive</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-md-9" >
+                  </div>
+                  <div class="col-md-1" >
+                    <a href="javascript:void(0)" ng-click="unactive()" ng-show="actived"><i class="fa fa-star-o"></i></a>
+                    <a href="javascript:void(0)" ng-click="active()" ng-show="!actived"><i class="fa fa-star star_yellow"></i></a>
+                    <input type="hidden" name="actived_id" ng-model="actived_id" id="actived_id" value="{{actived_id}}" >
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.block_title.$invalid && !Bucket_content_form.block_title.$pristine }">
+                        <input type="text" class="form-control" rows="3" id="block_title" ng-model="block.block_title" name="block_title" placeholder="Enter Block Title" required>
+                        <p ng-show="Bucket_content_form.block_title.$invalid && !Bucket_content_form.block_title.$pristine" class="help-block">Title is required.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.block_des.$invalid && !Bucket_content_form.block_des.$pristine }">
+                        <textarea class="form-control" rows="3" name="block_des" id="block_des" ng-model="block.block_des" placeholder="Enter Block Discription"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.mastertags.$invalid && !Bucket_content_form.mastertags.$pristine }">
+                        <selectize placeholder='Select Master tag' id="master_tags_id" options='tagbucketdisplay' name='mastertags' ng-model="block.mastertags" config="{maxItems: 1}" ngRequired="{maxItems :true}"></selectize>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.metatags.$invalid && !Bucket_content_form.metatags.$pristine }">
+                        <selectize placeholder='Select Meta tags' id="meta_tags_id" options='metabucketdisplay' name='metatags' config="custom_create" ng-model="block.metatags" ></selectize>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <label class="switch">
+                      <input type="checkbox" name="due_date" id="due_date" ng-model="due_date1" checked>
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.task_deadline.$invalid && !Bucket_content_form.task_deadline.$pristine }">
+                        <div class='date'>
+                          <input type='text' class="form-control" id="task_deadline" name="task_deadline"  ng-model="tomorrow" required/>
+                          <span class="input-group-addon icn-hide">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                        <p ng-show="Bucket_content_form.task_deadline.$invalid && !Bucket_content_form.task_deadline.$pristine" class="help-block">Date is required.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.task_deadline_time.$invalid && !Bucket_content_form.task_deadline_time.$pristine }">
+                        <input type="text" class="form-control"  id="task_deadline_time" name="task_deadline_time" ng-model="time" required>
+                        <p ng-show="Bucket_content_form.task_deadline_time.$invalid && !Bucket_content_form.task_deadline_time.$pristine" class="help-block">Time is required.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <i class="fa fa-refresh"></i>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <img ng-src="imgs/{{img}}" class="image_pro add_block_img">
+                  </div>
+                  <div class="col-md-10">
+                    <div class="form-group">
+                      <div class="form-group" ng-class="{ 'has-error' : Bucket_content_form.task_users.$invalid && !Bucket_content_form.task_users.$pristine }">
+                        <selectize placeholder='Select task assign users'  id="task_users" options='add_user' name='task_users' ng-model="block.task_users_arr"></selectize>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="hidden" class="form-control" name="bucket_id" id="bucket_id" ng-model="block.bucket_id" ng-value="bucket_id">
+                    <input type="hidden" class="form-control" name="action" id="action" value="add_content_bucket">
+                    <input type="hidden" class="form-control" name="login_id" id="login_id" value="{{login_id}}">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-default collse" ng-disabled="Bucket_content_form.$invalid">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade tagModal" id="" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="col-md-2 pull-left">
+            <i class="fa fa-tags tag_icon"></i>
+          </div>
+          <div class="col-md-10 pull-right">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <h5>Tagged Bucket</h5>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <select class="form-control" ng-model="countSelector" ng-change="bucket_option()" ng-options="opt as opt.label for opt in options">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" ng-show="blocks_tag">
+                <div class="col-md-12">
+                  <button class="btn dropdown-toggle action_btn" data-toggle="dropdown">
+                    <span style="text-align: left;">Select master tagged Bucket</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-form" ng-click="$event.stopPropagation();" >
+                      <div class="col-md-12 pull-left">
+                        <ul class="list-group" ng-repeat="tag in customerbucketdisplay1" ng-if="tag.Id!=1" >
+                            <li class="list-group-item a" style="border: none;">
+                              <label class="container-chk">
+                                <input type="checkbox" value="tag.Id" id="status" ng-model="tag.Name1" class="Form-label-checkbox" ng-change="IfCheckMaster1(tag, tag.Name1)">
+                                <span class="checkmark"></span></label>
+                                <span class="chk-role"># {{tag.Name}}</span>
+                              </li>
+                          </ul>
+                        </div>
+                      </ul>
+                </div>
+              </div>
+              <div class="form-group" ng-show="blocks_board">
+                <div class="col-md-12">
+                  <button class="btn dropdown-toggle action_btn" data-toggle="dropdown">
+                    <span style="text-align: left;">Select Person tagged Bucket</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-form" ng-click="$event.stopPropagation();" >
+                      <div class="col-md-12 pull-left">
+                  <ul class="list-group" ng-repeat="tag in archivedbucketdisplay1">
+                      <li class="list-group-item a" style="border: none;">
+                        <label class="container-chk"> 
+                          <input type="checkbox" value="tag.Id" id="status" ng-model="tag.Name1" class="Form-label-checkbox" ng-change="IfCheckPeople1(tag.Id, tag.Name,tag.Name1)"><span class="checkmark"></span></label>
+                        <span class="chk-role">@{{tag.Name}}</span>
+                      </li>
+                  </ul>
+                  </div>
+                </ul>
+
+                </div>
+              </div>
+              <div class="col-md-12">
+                <input type="hidden" name="sorting_tag" class="sorting_tag" ng-model="sorting_tag" ng-value="master_tag">
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls">
+                    <label class="checkbox inline">
+                      <input type="checkbox" ng-model="check">
+                      Hide All boards phase buckets
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls pull-right">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    <button  type="button" ng-click="apply_tags_shorting(sorting_tag);" class="btn btn-default collse">Apply to Board</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade peoplemodal" id="" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="col-md-2 pull-left">
+            <i class="fa fa-th-list tag_icon"></i>
+          </div>
+          <div class="col-md-10 pull-right">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <h5>Make Sorting Bucket</h5>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <select class="form-control" ng-model="countSelector" ng-change="bucket_option()" ng-options="opt as opt.label for opt in options">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" ng-show="blocks_tag">
+                <div class="col-md-12">
+                  <select name="blocks_tags" ng-model="blocks_tags" class="form-control">
+                    <option value="" selected="selected">Select Board Bucket</option>
+                    <option ng-repeat="data1 in tagbucketdisplay1" ng-if="data1.Id!=1" value="{{data1.Id}}"># {{data1.Name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" ng-show="blocks_board">
+                <div class="col-md-12">
+                  <select name="blocks_people" ng-model="blocks_people" class="form-control">
+                    <option value="" selected="selected">Select Board Bucket</option>
+                    <option ng-repeat="data2 in archivedbucketdisplay1" value="{{data2.Id}}">@ {{data2.Name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls">
+                      <input type="hidden" name="sorting_tag1" class="sorting_tag1" ng-model="sorting_tag1" >
+
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls pull-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <button ng-if="sorting_tag1=='master_tag'" type="button" class="btn btn-default collse" ng-click="apply_tags();" >Apply to Board</button>
+                     <button ng-if="sorting_tag1=='person_tag'" type="button" class="btn btn-default collse" ng-click="apply_people();" >Apply to Board</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="hoursmodal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="col-md-2 pull-left">
+            <i class="fa fa-clock-o tag_icon"></i>
+          </div>
+          <div class="col-md-10 pull-right">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <h5>Make Time Sorting Bucket</h5>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-4">
+                  <h6>Start time</h6>
+                </div>
+                <div class="col-md-8">
+                  <div class="input-group bootstrap-timepicker timepicker">
+                    <input id="timepicker1" name="hour_time" type="text" class="form-control input-small" ng-model="hour_time">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="controls pull-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default collse" ng-click="apply_dates(hour_time);">Apply to Board</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Edit Block -->
+  <div class="modal edit_block animated bounceInUp" id="" role="dialog" style="z-index: 11;">
+    <div class="modal-dialog edit_window">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Block</h4>
+        </div>
+        <div class="modal-body">
+          <div class="registration_msg" ng-show="msg1" ng-bind-html="msg"></div>
+          <form name="edit_main_block" id="edit_main_block" ng-submit="edit_file();" method="POST">
+            <div class="container-fluid person-block">
+              <div class="row">
+                <div class="col-sm-2 top-left">
+                  <span>
+                    <a href="javascript:void(0)" ng-click="edit_untask()" ng-if="task_sta==1"><i class="fa fa-check people-icn"></i></a>
+                    <a href="javascript:void(0)" ng-click="edit_task()" ng-if="task_sta==0"><i class="fa fa-reply-all people-icn"></i></a>
+                    <a href="javascript:void(0)" ng-click="edit_unstar()" ng-if="active_sta==0" ><i class="fa fa-star-o people-icn"></i></a>
+                    <a href="javascript:void(0)"  ng-click="edit_star()" ng-if="active_sta==1" ><i class="fa fa-star star_yellow people-icn"></i></a>
+                    <input type="hidden" name="task_sta" ng-model="task_sta" id="task_sta" value="{{task_sta}}" >
+                    <input type="hidden" name="active_sta" ng-model="active_sta" id="active_sta" value="{{active_sta}}" >
+                  </span>
+                </div>
+                <div class="col-sm-8 top-mid">
+                  <span><p>Prepare Invoice for {{master}}</p></span>
+                </div>
+                <div class="col-sm-2 top-right" ng-init="edit_lock=0">
+                  <span>
+                    <a href="javascript:void(0)" ng-show="edit_lock == 0" ng-click="edit_lock=1"><i class="fa fa-lock people-icn"></i></a>
+                    <a href="javascript:void(0)" ng-show="edit_lock == 1" ng-click="edit_lock=0"><i class="fa fa-unlock-alt people-icn"></i></a>
+                    <a href="javascript:void(0)" ng-click="del_block(update_id)" data-dismiss="modal" class="spacer"><i class="fa fa-trash people-icn""></i></a>
+                  </span>
+                </div>
+              </div>
+              <div class="row form-group">
+                <div class="col-md-12">
+                  <input class="form-control" id="block_title" ng-model="block_title" name="block_title" placeholder="Enter Block Title" required>
+                </div>
+              </div>
+            
+              <div class="form-row align-items-center">
+                <div class="col-auto">
+                  <label for="sort" class="col-sm-2 control-label"> Phase </label>
+                </div>
+                <div class="col-auto">
+                  <select name="block_status" class="form-control mb-2" ng-model="bucket_id">
+                    <option ng-repeat="bucket_st in mainbucketdisplay" value={{bucket_st.Id}} >{{bucket_st.Name}}</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <select class="form-control mb-2" name="sort" id="sort">
+                    <option value="1">Board</option>
+                  </select>
+                </div>
+                <div class="col-auto">
+                  <label for="sort" class="control-label"> Master Tag </label>
+                </div>
+                <div class="col-4">
+                  <selectize placeholder='Select Master tags' config="{maxItems: 1}" options='tagbucketdisplay' name='mastertags' class="mastertags" ng-model="mastertags" ></selectize>
+                </div>
+              </div>
+              <div class="row info2">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="meta_tag">Meta tag</label>
+                    <selectize placeholder='Select meta tags' class="meta_tags_id" options='metabucketdisplay' name='metatags' config="custom_create" ng-model="meta_tag_id" ></selectize>
+                  </div>
+                </div>
+              </div>
+              <div class="row info3">
+                <div class="col-sm-5">
+                  <div class="form-group">
+                    <md-switch class="something" ng-model="due_date_status" aria-label="Switch 1"></md-switch>Due Date<span class="pull-right"><i class="fa fa-refresh"></i> Sync</span>
+                    <div style="overflow:hidden;">
+                      <div class="form-group info2">
+                        <div class='date'>
+                          <input type='text' class="form-control tasking" id="task_deadline1" name="task_deadline1"  ng-model="task_deadline1" value="{{task_deadline1}}" />
+                          <span class="input-group-addon icn-hide">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" class="form-control tasking"  id="task_deadline_time1" name="task_deadline_time1" ng-model="task_deadline12" >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-7">
+                  <div class="form-group">
+                    <label for="details">Details</label>
+                     <textarea class="form-control" name="block_des" id="block_des" ng-model="block_des" placeholder="Enter Block Discription" ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="">
+                  <div class="" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
+                        <i class="more-less glyphicon glyphicon-plus"></i>People
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapsefour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                      <div class="col-sm-4">
+                        <label>Internal Stackholders</label>
+                        <div class="form-inline">
+                          <selectize placeholder='Select task assign users' id="task_users" options='add_user' name='task_users' class="task_users" ng-model="task_assign_user" ></selectize>
+                          <i class="fa fa-user-plus people-icn "></i>
+                        </div>
+                        <div class="form-group">
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <label>Block Email</label>
+                        <div class="form-inline">
+                          <input type="text" class="form-control" style="width: 85%;" ng-model="task_block_email" placeholder="Toshiba.8b20e4@schedu.live">
+                          <i class="fa fa-files-o people-icn"></i>
+                          <i class="fa fa-envelope people-icn"></i>
+                        </div>
+                        <div class="form-group">
+                          <label>External Stackholders</label>
+                          <textarea class="form-control" rows="3" id="comment" placeholder="TO: Oren Aharon <oren.aharon@toshibacomm.com>;"></textarea>
+                          <textarea class="form-control" rows="3" id="comment" style="margin-top: 1%;" placeholder="CC: Catelyn Stark <catelyn@4xrecuirt.co.uk>;"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- panel-group -->
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="">
+                  <div class="" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Attachments
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body" ng-init="file_mat = false;file_this = true;">
+                      <div class="row ">
+                        <div class="col-sm-5" >
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)"><input type="checkbox" ng-model="file_this">This Block</a>
+                          </label>
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)" ><input type="checkbox" ng-model="file_mat">Of Master Tag</a>
+                          </label>
+                          <label class="checkbox-inline">
+                          </label>
+                        </div>
+                        <div class="col-sm-7"></div>
+                      </div>
+                      <div class="row">
+                        <div class="dropdown file_margin col-md-2">
+                            <div class="block-bb" data-toggle="dropdown">
+                              <label for="block_email"><i class="fa fa-plus-circle ss1"></i></label>
+                              <div class="atta1">
+                                <label for="block_email" class="form-inline add_aat" >Add Item</label>
+                              </div>
+                            </div>
+                            <ul class="dropdown-menu" ng-init="at_link=0" ng-click="$event.stopPropagation();">
+                              <li><input type="file" name="edit_file" class="edit_file">Upload File</li>
+                              <li><a href="javascript:void(0)" ng-click="at_link=1" >Attach Link</a></li>
+                              <li ng-show="at_link==1"><input type="text" ng-model="att_link"></li>
+                              <li ng-show="att_link.length >= 1"><input type="text" ng-model="att_name"></li>
+                              <li ng-show="att_link.length >= 1"><a href="javascript:void(0)" class="btn btn-primary" ng-click="ath_link(att_link,att_name,all_data)">Submit</a></li>
+                              <li><a href="javascript:void(0)" ng-click="loadPicker()">From Google Drive</a></li>
+                              <li><a href="javascript:void(0)">From Dropbox</a></li>
+                              <li><a href="javascript:void(0)">From OneDrive</a></li>
+                            </ul>
+                          </div>
+                        <div class="col-md-10 lef">
+                          <div class="block-bb" ng-repeat="file in file_data" ng-show="file_this">
+                            <label for="block_email" ng-if="file.ext == '.pdf'"><i class="fa fa-file-pdf-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.jpg'"><i class="fa fa-list-alt ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.xls' || file.ext == '.xlsx'"><i class="fa fa-file-excel-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.doc' || file.ext == '.docx'"><i class="fa fa-file-word-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.zip' || file.ext == '.rar' || file.ext == '.7z' || file.ext == '.tar'"><i class="fa fa-file-archive-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.ppt' || file.ext == '.pptx' || file.ext == '.pps' || file.ext == '.ppsx'"><i class="fa fa-file-powerpoint-o ss1"></i></label> 
+                            <a href="{{file.url}}" target="_blank">
+                              <label for="block_email" ng-if="file.ext == 'g_drive'"><i class="fa fa-google ss1"></i></label>
+                              <label for="block_email" ng-if="file.ext == 'link'"><i class="fa fa-link ss1"></i></label>
+                            </a>
+                              <div class="atta1" ng-init="file_name = 1">
+                                <label for="block_email" class="form-inline add_aat" ng-click="file_name = 0" ng-show="file_name == 1">{{file.name}}</label>
+                                <input type="text" ng-model="file.name" class="update_bor" ng-blur="file_name_data(file);file_name = 1;" ng-show="file_name == 0">
+                              </div>                            
+                          </div>
+
+                          <div class="block-bb" ng-repeat="file in file_master" ng-show="file_mat">
+                            <label for="block_email" ng-if="file.ext == '.pdf'"><i class="fa fa-file-pdf-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.jpg'"><i class="fa fa-list-alt ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.xls' || file.ext == '.xlsx'"><i class="fa fa-file-excel-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.doc' || file.ext == '.docx'"><i class="fa fa-file-word-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.zip' || file.ext == '.rar' || file.ext == '.7z' || file.ext == '.tar'"><i class="fa fa-file-archive-o ss1"></i></label>
+                            <label for="block_email" ng-if="file.ext == '.ppt' || file.ext == '.pptx' || file.ext == '.pps' || file.ext == '.ppsx'"><i class="fa fa-file-powerpoint-o ss1"></i></label> 
+                            <a href="{{file.url}}" target="_blank">
+                              <label for="block_email" ng-if="file.ext == 'g_drive'"><i class="fa fa-google ss1"></i></label>
+                              <label for="block_email" ng-if="file.ext == 'link'"><i class="fa fa-link ss1"></i></label>
+                            </a>
+                              <div class="atta1" ng-init="file_name = 1">
+                                <label for="block_email" class="form-inline add_aat" ng-click="file_name = 0" ng-show="file_name == 1">{{file.name}}</label>
+                                <input type="text" ng-model="file.name" class="update_bor" ng-blur="file_name_data(file);file_name = 1;" ng-show="file_name == 0">
+                              </div>                            
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- panel-group -->
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="">
+                  <div class="" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Related Blocks
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                      <div class="row info5">
+                        <div class="col-sm-12 lef" >
+                          <div class="block-bb" ng-repeat="data in related" ng-if="data.id != update_id" ng-click="related_edit(data)">
+                            <label for="block_email"><i class="fa fa-list-alt ss1 normal_line1" ng-class="{gray_line1: data.status == 2 ,yello_line1 :data.active_status == 1,red_line1 : data.date_diff == 1,green_line1 : data.task_status == 1}"></i></label>
+                            <div class="atta1">
+                              <label for="block_email" class="form-inline person-block add_aat">{{data.title}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- panel-group -->
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="">
+                  <div class="" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Block Story
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" ng-init="st_lg=0;st_cn=0;st_nt=0;st_em=0;">
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-sm-12 lef dom">
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)" ng-hide="story_log" ng-click="story_log = true;st_lg = 0"><i class="fa fa-eye col-icn"></i> Log</a>
+                            <a href="javascript:void(0)" ng-hide="!story_log" ng-click="story_log = false;st_lg = 1"><i class="fa fa-eye-slash col-icn slash-off"></i> Log</a>
+                          </label>
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)" ng-hide="story_conv" ng-click="story_conv = true;st_cn = 0"><i class="fa fa-eye col-icn"></i > Conversations</a> 
+                            <a href="javascript:void(0)" ng-hide="!story_conv" ng-click="story_conv = false;st_cn = 2"><i class="fa fa-eye-slash col-icn slash-off"></i > Conversations</a>
+                          </label>
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)" ng-hide="story_note" ng-click="story_note = true;st_nt = 0"><i class="fa fa-eye col-icn"></i> Notes</a>
+                            <a href="javascript:void(0)" ng-hide="!story_note" ng-click="story_note = false;st_nt = 3"><i class="fa fa-eye-slash col-icn slash-off"></i> Notes</a>
+                          </label>
+                          <label class="checkbox-inline">
+                            <a href="javascript:void(0)" ng-hide="story_email" ng-click="story_email = true;st_em = 0"><i class="fa fa-eye col-icn"></i> E-mails</a>
+                            <a href="javascript:void(0)" ng-hide="!story_email" ng-click="story_email = false;st_em = 4"><i class="fa fa-eye-slash col-icn slash-off"></i> E-mails</a>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- todo : here hide -->
+                      <div ng-hide="(story_conv && story_note)" class="form-group som test">
+                       <input type="hidden" ng-model="all_data">
+
+                       <div class="form-group">
+                       <div class="col-md-4">
+                       <select class="form-control" ng-model="con_converstion">
+                       <option  ng-repeat="con in tasked_user">@{{con.title}} </option>
+                       </select>  
+                       </div>
+                       </div>  
+                         <div class="form-group">
+                       <div class="col-md-8"> 
+                        <input type="text" name="" class="form-control" ng-model="con_converstion" ng-blur="str_convr(con_converstion,update_id,all_data)">
+                        </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                     <ul ng-repeat="str in stry_all" class="list-group" ng-show="(str.sort == st_lg) || (str.sort == st_cn) || (str.sort == st_nt) || (str.sort == st_em)">
+                       <li class="list-group-item str-border"><span><i class="{{str.icon}} str-icon"></i>{{str.create_date}} | {{str.info}} | By:{{str.user}}</span>
+                       </li>
+                     </ul>                      
+                  </div>                  
+                </div>
+              </div><!-- panel-group -->
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="action" id="action" value="edit_main_block_action">
+              <input type="hidden" name="update_id" id="update_id" ng-model="update_id" value="{{update_id}}">
+              <button type="submit" class="btn btn-default collse" ng-disabled="edit_main_block.$invalid">Update</button>
+              <button type="button" class="btn btn-default" id="auto_close" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- header start -->
+  <div class="container-fluid spacer">
+    <div class="row">
+      <div class="col-md-5 col-xs-12 col-sm-12 col-lg-5">
+        <div class="input-group" ng-init="show=1;board_dis()">
+          <span class="input-group-addon buck" ng-show="show == 0" ng-click="show=1"><i class="fa fa-unlock-alt icon-b buck-size"></i></span>
+          <span class="input-group-addon buck" ng-show="show == 1" ng-click="show=0" style="border-radius: 4px;"><i class="fa fa-lock icon-b buck-size"></i></span>
+          <input id="bucket" type="text" class="form-control" name="bucket" placeholder="Enter board name" value="{{board_name}}" ng-model="board_name" ng-blur="board_submit(board_name);show=1" ng-readonly="show == 1">
+        </div>
+      </div>
+      <div class="col-md-7 col-xs-12 col-sm-12 col-lg-7">
+        <div class="form-inline pull-right menu_icons">
+          <div class="form-group menu2_col">
+            <a href="javascript:void(0)" ng-click="contract_view()" ng-class="{'icon_color': !contra}"><i class="fa fa-th border icon-b" ></i></a>
+            <a href="javascript:void(0)" ng-click="expanded_view()" ng-class="{'icon_color': !exp}"><i class="fa fa-th-large border icon-b"></i></a>
+            <a href="javascript:void(0)" ng-class="{'adisabled': !usable , 'icon_color': !cal}" ng-click="doOperation($event);"><i class="fa fa-calendar border icon-b"></i></a>
+            <a href="javascript:void(0)" ng-show="calender_view_n == false" ng-class="{'icon_color': !rmv_cal}" ng-click="remove_calender_view()" ><i class="fa fa-bars border icon-b"></i></a>
+            <div class="vl"></div>
+            <a href="javascript:void(0)" ng-click="toggle=!toggle"
+            ng-class="toggle ? 'icon_color' : 'icon-b'"
+            ><i class="fa fa-filter border icon-b"></i></a>
+          </div>
+          <div class="form-group">
+            <a href="javascript:void(0)" class="user_left" ng-click="board_save()"><i class="fa fa-save icon-b"></i></a>
+            <a href="javascript:void(0)"><i class="fa fa-reply-all icon-b"></i></a>
+          </div>
+          <div class="form-group">
+            <img ng-src="imgs/{{img}}" class="image_pro">
+            <label class="username">Hi,&nbsp;<span>{{username1}}</span></label>
+          </div>
+          <div class="form-group user_settings">
+            <a href="javascript:void(0)" data-toggle="dropdown" class="user_left"><i class="fa fa-users icon-b"></i></a>
+            <ul class="dropdown-menu dp-style" ng-init='user_list_data();'>
+              <li ng-repeat="user in users" ng-if="user.user_role == 1"><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;border-radius: 4px;"></i> <img ng-src="imgs/{{user.profile_img}}" height="15px" width="15px"> {{user.username}}</a></li>
+              <li ng-repeat="user in users" ng-if="user.user_role == 2"><a href="javascript:void(0)"><i class="fa fa-user admin" style="color: #2f4773; background-color: #007eff40;border-radius: 3px;"></i> <img ng-src="imgs/{{user.profile_img}}" height="15px" width="15px"> {{user.username}}</a></li>
+              <li ng-repeat="user in users" ng-if="user.user_role == 3"><a href="javascript:void(0)"><i class="fa fa-user admin" style="color: #236926; background-color: #4caf5070;border-radius: 8px;"></i> <img ng-src="imgs/{{user.profile_img}}" height="15px" width="15px"> {{user.username}}</a></li>
+              <li ng-repeat="user in users" ng-if="user.user_role == 4"><a href="javascript:void(0)"><i class="fa fa-eye admin" style="color: #236926; background-color: #4caf5070;border-radius: 8px;"></i> <img ng-src="imgs/{{user.profile_img}}" height="15px" width="15px"> {{user.username}}</a></li>
+            </ul>
+            <a href="javascript:void(0)" class="user_left"><i class="fa fa-cog icon-b"></i></a>
+            <a href="javascript:void(0)" ng-click="del_board()"><i class="fa fa-trash icon-b"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row spacer" ng-show="toggle">
+      <div class="col-md-4 col-xs-12 tag_field form-group">
+        <div class="form-control hash-icon">
+          <a href="#"><i class="fa fa-hashtag"></i></a>
+        </div>
+        <div class="hash-main">
+          <button class="btn dropdown-toggle action_btn" data-toggle="dropdown">
+            <span ng-repeat="role1 in repeatData" class="tag label label-info" style="background-color: {{role1.value}}">{{role1.data}}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-form" ng-click="$event.stopPropagation();" >
+            <form>
+              <div class="col-md-4 pull-left"><label># Master Tags</label>
+                <ul class="list-group" ng-repeat="tag in customerbucketdisplay1">
+                  <li class="list-group-item a" ng-hide="tag.Id == 1">{{tag.Name}}</li>
+                  <span  ng-repeat="role in tag.bucket_con">
+                    <li class="list-group-item a">
+                      <label class="container-chk">
+                        <input type="checkbox" value="role.id" id="status" ng-model="role.Name1" class="Form-label-checkbox" ng-change="IfCheckMaster(role, role.Name1)">
+                        <span class="checkmark"></span></label>
+                        <span class="chk-role"># {{role.title}}</span>
+                      </li>
+                    </span>
+                  </ul>
+                </div>
+                <div class="col-md-4 pull-left" ><label>@ People</label>
+                  <ul class="list-group" ng-repeat="tag in archivedbucketdisplay1">
+                    <li class="list-group-item a" >{{tag.Name}}</li>
+                    <span ng-repeat="role in tag.bucket_con">
+                      <li class="list-group-item a">
+                        <label class="container-chk"> <input type="checkbox" value="role.id" id="status" ng-model="role.title1" class="Form-label-checkbox" ng-change="IfCheckPeople(role.id, role.title,role.title1)"><span class="checkmark"></span></label>
+                        <span class="chk-role">@{{role.title}}</span>
+                      </li>
+                    </span>
+                  </ul>
+                </div>
+                <div class="col-md-4 pull-left">
+                  <ul class="list-group"><label># Meta Tags</label>
+                    <span ng-repeat="role in metabucketdisplay">
+                      <li class="list-group-item a">
+                        <label class="container-chk">
+                          <input type="checkbox" value="role.Id" id="status" ng-model="role.Name1" class="Form-label-checkbox" ng-change="IfCheck(role, role.Name1)">
+                          <span class="checkmark"></span></label>
+                          <span class="chk-role"># {{role.Name}}</span>
+                        </li>
+                      </span>
+                    </ul>
+                  </div>
+                </form>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12 form-group" >
+            <div class="input-group input-group-unstyled">
+              <i class="fa fa-book icon-b icon_b phase_b"></i>
+              <select class="form-control " id="sel1" ng-init="bucket_value=2" ng-model="bucket_value" ng-change="bucket_filter(bucket_value)">
+                <option ng-value="1">Date Buckets</option>
+                <option ng-value="2" >Phase Buckets</option>
+                <option ng-value="3">Date Buckets: Due only</option>
+                <option ng-value="4">Date Buckets: All in range</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3 col-xs-12 date-in form-group">
+            <div class='date  col-xs-6'>
+              <span><i class="fa fa-calendar cal-d"></i></span>
+              <input type='text' ng-model="from_date" class="form-control cal-input" id='datetimepicker1' />
+            </div>
+            <div class='date col-xs-6'>
+              <span><i class="fa fa-arrow-right cal-d1"></i></span>
+              <input type='text' ng-model="to_date" class="form-control cal-input" id='datetimepicker2'/>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-12 form-group " >
+            <div class="form-group has-feedback">
+              <input type="text" class="form-control " id="inputSuccess2" ng-model="mab_filter" ng-disabled="calender_view_n == false"/>
+              <i id="filtersubmit" class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- header stop -->
+<!--       <h5 class="right {{last_hide}}"><b>Last Login:</b> {{last_log}}</h5> -->
+      <div id="kaban">
+        <div id="scroller">
+          <!-- calender hide start -->
+          <div id="boards" ng-show="calender_view_n">
+         
+            <!-- Sort master Bucket -->
+            <div class="board" id="boardn" ng-repeat="results in sort_master | filter:mab_filter" style="border: 1px solid;">
+              <header>
+                <ul class="nav navbar-nav">
+                  <li class="left_header_icon">
+                    <i class="fa fa-th-list" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <ul class="dropdown-menu" ng-hide="true">
+                      <li><a tabindex="-1" href="javascript:void(0)"><i class="fa fa-eye-slash"></i> Hide Bucket</a></li>
+                      <li><a tabindex="-1" href="javascript:void(0)"><i class="fa fa-window-restore"></i> Always on-top</a></li>
+                      <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-sort-alpha-asc"></i> Sort Blocks</a>
+                        <ul class="dropdown-menu" ng-click="$event.stopPropagation();">
+                          <li><a tabindex="-1" href="javascript:void(0)"><div class="checkbox eye-chk">
+                            <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Due Date</span></label>
+                          </div></a></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                            <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Status</span></label>
+                          </div></a></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                            <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Owners</span></label>
+                          </div></a></li>
+                          <li class="divider"></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" >
+                            <div class="checkbox eye-chk">
+                              <label class="switch"><input type="checkbox" value="" checked><span class="slider round slider-1"></span><span class="eye-slide">Low to High</span></label>
+                            </div>
+                          </a></li>
+                        </ul>
+                      </li>
+                      <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tags"></i> Tagged Bucket</a>
+                        <ul class="dropdown-menu">
+                          <li><a tabindex="-1" data-toggle="modal" data-target=".tagModal" href="javascript:void(0)" ng-click="by_people()"><i class="fa fa-at"></i> By People...</a></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".tagModal" ng-click="by_master_tag()"><i class="fa fa-hashtag"></i> By Master Tags...</a></li>
+                        </ul>
+                      </li>
+                      <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tasks"></i> Sorting Bucket</a>
+                        <ul class="dropdown-menu">
+                          <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#hoursmodal"><i class="fa fa-clock-o"></i> By Hours...</a></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_people_sort()"><i class="fa fa-at"></i> By People...</a></li>
+                          <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_master_tag_sort()"><i class="fa fa-hashtag"></i> By Master Tags...</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <span>{{icon1}}{{results.Name}}</span>
+                <div class="dropdown pull-right" ng-hide="true">
+                  <i class="fa fa-bars" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <div class=" home-side">
+                      <ul class="list-group ">
+                        <li class="list Board1">Bucket Operations</li>
+                        <ul class="list-group sub1">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Bucket to</li>
+                          <li class="list-group-item"><i class="fa fa-lock"></i> Lock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-unlock"></i> Unlock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-times"></i> Delete Bucket</li>
+                        </ul>
+                        <li class="list Board2"> Blocks Operations</li>
+                        <ul class="list-group sub2">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Blocks to</li>
+                          <li class="list-group-item"><i class="fa fa-check"></i> Mark all as Done</li>
+                          <li class="list-group-item"><i class="fa fa-recycle"></i> Archived Blocks</li>
+                        </ul>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <ul class="cards" id="b1" dnd-list="results.bucket_con" dnd-disable-if="results.lock_status == 1 || true">  
+               <div ng-repeat="master in query track by $index">
+                 <div  style="{{master.height}}"  >              
+                <li class="card" ng-repeat="blocks in results.bucket_con" ng-if="master.mas_id==blocks.id" dnd-moved="(results.bucket_con).splice($index, 1);drop(mainbucketdisplay,results.Id)" dnd-draggable="blocks" dnd-dragstart="drag(blocks)" dnd-disable-if="results.lock_status == 1 || true">
+                  <div class="card-side-left" ng-class="class" style="background-color: {{blocks.color.color}};">
+                    <div ng-class="class_hide_show">
+                      <a href="javascript:void(0)" > <i class="fa fa-bars"></i></a>
+                      <a href="javascript:void(0)" ng-if="blocks.task_status==1" ng-click="done_block(blocks.id,0,'fb_tag_blocks',2)" ng-show="user_role == 1"><i class="fa fa-check open_div"></i></a>
+                      <a href="javascript:void(0)" ng-if="blocks.task_status==0" ng-click="done_block(blocks.id,1,'fb_tag_blocks',2)"  ng-show="user_role == 1"><i class="fa fa-reply-all open_div"></i></a>
+                      <a href="javascript:void(0)" ng-click="edit_blk(blocks)"  data-toggle="modal" data-target=".edit_block"> <i class="fa fa-external-link open_div" ng-show="user_role == 1"></i></a>
+                      <a href="javascript:void(0)" ng-click="del_Tagblock(blocks.id)" ng-show="user_role == 1"> <i class="fa fa-trash open_div"></i></a>
+                      <a href="javascript:void(0)" ng-click="disp(blocks.id);hide_notify(blocks.id,'fb_tag_blocks',0);blocks.notify = 0"><i class="fa fa-angle-double-down"></i></a>
+                      <a href="javascript:void(0)" ng-click="disp_hide(blocks.id)"><i class="fa fa-angle-double-up open_div"></i></a>
+                    </div>
+                  </div>
+                  <div class="card-side">
+                    <p class="cardtitle noselect"><b>{{icon1}} {{blocks.title}}</b></p>
+                    <span ng-repeat = "showing in content">
+                      <p class="desc_height" ng-show="showing == blocks.id && !all_content">{{blocks.description}}</p>
+                    </span>
+                    <p class="desc_height" ng-if="all_content" ng-show="all_content">{{blocks.description}}</p>
+                  </div>
+                  <div class="card-side_icon">
+                    <i ng-if="blocks.active_status == 0" ng-click="unact_str_tag(blocks.id);blocks.active_status = 1" class="fa fa-star-o"></i>
+                    <i ng-if="blocks.active_status == 1" ng-click="act_str_tag(blocks.id);blocks.active_status = 0" class="fa fa-star star_yellow"></i>
+                    <i class="fa fa-info-circle" ng-show="blocks.notify == 1"></i>
+                  </div>
+                  <div class="card-date">
+                    <span class="time grey" ng-class="{off_date :blocks.due_date_status == 0,green_done : blocks.task_status == 0,red_line : blocks.date_diff == 1}">{{blocks.task_deadline_date}} {{blocks.task_deadline_time}}</span>
+                    <span class="img" class="dropdown dp-style"  ng-repeat="user_img in blocks.user_img">
+                      <img   ng-src="imgs/{{user_img.profile_img}}" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;">
+                      <ul class="dropdown-menu dp-style list-group tasked" ng-click="$event.stopPropagation();">
+                         <li class="list-group-item" ><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;"></i> <img ng-src="imgs/{{user_img.profile_img}}" height="15px" width="15px"> {{user_img.username}}</a></li>
+
+                         <li class="list-group-item" ng-repeat="user in blocks.tasked_user" > 
+                          <label class="container-chk" ng-hide="user_role >= 2">
+                            <input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean)" ng-checked="true"> 
+                            <span class="checkmark"></span>
+                          </label>
+
+                          <span ng-repeat="imo in blocks.tasked_img | limitTo:letterLimit">
+                           <img ng-src="files/{{imo.name}}" class="round_img"  height="20px" width="25px" ng-if="imo.block_id == user.id">
+                            <span ng-if='imo.block_id != user.id' class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span>
+                        
+                         </span> {{user.title}}</li>
+
+                          <li class="list-group-item" ng-repeat="user in blocks.not_user" ng-hide="user_role >= 2"> <label class="container-chk"><input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean)" ng-if="user_role <= 2"><span class="checkmark"></span></label>  <span class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span> {{user.title}}</li>
+
+                       </ul>
+                    </span>
+                    <div class="menu-icon">
+                     <span class="line a" ng-repeat="col in blocks.colors" style="background-color: {{col.color}}"></span>
+                    </div>
+                  </div>
+                  <div class="pull-right"></div>
+                </li>
+                  </div>
+                </div>
+              </ul>
+            </div>
+            <!--shorting-->
+            <div class="board" id="boardn" ng-repeat="bucket in customerbucketdisplay | filter:mab_filter" ng-class="{hide_bucket_cls :bucket.is_hide == 1, always_on_top: ids == bucket.id}" ng-drop="false" ng-drop-success="onDropComplete1($data,$event,bucket.bucket_con,bucket.Id)">
+              <!--  <span ng-class="{hide_bucket_cls :bucket.is_hide == 1}"> -->
+                <div class="Raga">
+                  <header>
+                    <span class="pull-left"> <i class="fa fa-tags" aria-haspopup="true" aria-expanded="false"></i></span>
+                    <span >{{icon}}{{bucket.title}}</span>
+                    <div class="dropdown pull-right" ng-hide="true">
+                      <i class="fa fa-bars" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                        <div class=" home-side">
+                          <ul class="list-group">
+                            <li class="list Board1">Bucket Operations</li>
+                            <ul class="list-group sub1">
+                              <li class="list-group-item"><i class="fa fa-share-square"></i> Move Bucket to</li>
+                              <li class="list-group-item"><a href="javascript:void(0)" ng-click="lock_unlock_bucket(bucket.Id,'fb_master_tag',1)";><i class="fa fa-lock"></i> Lock Bucket</a></li>
+                              <li class="list-group-item"><a href="javascript:void(0)" ng-click="lock_unlock_bucket(bucket.Id,'fb_master_tag',0)";><i class="fa fa-unlock"></i> Unlock Bucket</a></li>
+                              <li class="list-group-item"><a href="javascript:void(0)" ng-click="delete_bucket_fun(bucket.Id,'fb_master_tag','fb_main_blocks')";><i class="fa fa-times"></i> Delete Bucket</a></li>
+                            </ul>
+                            <li class="list Board2"> Blocks Operations</li>
+                            <ul class="list-group sub2">
+                              <li class="list-group-item"><i class="fa fa-share-square"></i> Move Blocks to</li>
+                              <li class="list-group-item"><a href="javascript:void(0)" ng-click="mark_bucket_done(bucket.Id,'fb_main_blocks')";><i class="fa fa-check"></i> Mark all as Done</a></li>
+                              <li class="list-group-item"><i class="fa fa-recycle"></i> Archived Blocks</li>
+                            </ul>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="cards" id="b1" >
+                    <div class="card" ng-repeat="blocks in bucket.bucket_con" ng-show="blocks != null"ng-drag-data="blocks" data-allow-transform="false" ng-drag-success="onDragSuccess1($data,$event,bucket.bucket_con,blocks.id)" ng-class="{grabbable: hover, grabbing:grab}" ng-mousedown="grab = true" ng-mouseup="grab = false" ng-mouseenter="hover = true" ng-mouseleave="hover = false" ng-drag="false">
+                      <div ng-class="{overlay_block :bucket.lock_status == 1}"></div>
+                      <div class="card-side-left" ng-class="class" style="background-color: {{blocks.color1.color}}">
+                        <div ng-class="class_hide_show">
+                          <a href="javascript:void(0)" > <i class="fa fa-bars"></i></a>
+                          <a href="javascript:void(0)" ng-if="blocks.task_status==1" ng-click="done_block(blocks.id,0,'fb_main_blocks')" ng-show="user_role == 1"><i class="fa fa-check open_div"></i></a>
+                          <a href="javascript:void(0)" ng-if="blocks.task_status==0" ng-click="done_block(blocks.id,1,'fb_main_blocks')"  ng-show="user_role == 1"><i class="fa fa-reply-all open_div"></i></a>
+                          <a href="javascript:void(0)" data-toggle="modal" data-target=".edit_block" ng-click="edit_blk(blocks)"  ng-show="user_role == 1"> <i class="fa fa-external-link open_div" ></i></a>
+                          <a href="javascript:void(0)" ng-click="del_block(blocks.id)"  ng-show="user_role == 1"> <i class="fa fa-trash open_div"></i></a>
+                          <a href="javascript:void(0)" ng-click="disp(blocks.id);hide_notify(blocks.id,'fb_main_blocks',0);"><i class="fa fa-angle-double-down"></i></a>
+                          <a href="javascript:void(0)" ng-click="disp_hide(blocks.id)"><i class="fa fa-angle-double-up open_div"></i></a>
+                        </div>
+                      </div>
+                      <div class="card-side">
+                        <p class="cardtitle noselect"><b>{{blocks.title}}</b></p>
+                        <span ng-repeat = "showing in content" >
+                          <p class="desc_height" ng-show="showing == blocks.id && !all_content">{{blocks.description}}</p>
+                        </span>
+                        <p class="desc_height" ng-if="all_content" ng-show="all_content">{{blocks.description}}</p> 
+                      </div>
+                      <div class="card-side_icon">
+                        <i ng-if="blocks.active_status == 0" ng-click="active_qw(blocks.id,'fb_blocks',1);(blocks.active_status = 1&& user_role<=2)" class="fa fa-star-o"></i>
+                        <i ng-if="blocks.active_status == 1" ng-click="active_qw(blocks.id,'fb_blocks',0);(blocks.active_status = 0&& user_role<=2)" class="fa fa-star star_yellow"></i>
+                        <i class="fa fa-info-circle" ng-show="blocks.notify == 1"></i>
+                      </div>
+                      <div class="card-date">
+                        <span class="time grey" ng-class="{off_date :blocks.due_date_status == 0,green_done : blocks.task_status == 0,red_line : blocks.date_diff == 1}">{{blocks.task_deadline_date}} {{blocks.task_deadline_time}}</span>
+                        <span class="img" class="dropdown dp-style" ng-repeat="user_img in blocks.user_img">
+                        <img   ng-src="imgs/{{user_img.profile_img}}" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;">
+                        <ul class="dropdown-menu dp-style list-group">
+                          <li class="list-group-item" ><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;"></i> <img ng-src="imgs/{{user_img.profile_img}}" height="15px" width="15px"> {{user_img.username}}</a></li>
+                          <li class="list-group-item" ng-repeat="user in blocks.tasked_user" >{{user.title}}</li>
+                        </ul>
+                      </i></span>
+                      <div class="menu-icon">
+                        <span class="line a" ng-repeat="col in blocks.colors" style="background-color: {{col.color}}"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pull-right"></div>
+                </div>
+              </div>
+            </div>
+            <!--end shorting-->
+            <!-- Add main Bucket -->
+            <div class="board1 col-1" id="boardn" ng-show="user_role == 1">
+              <i class="fa fa-plus-circle" data-toggle="modal" data-target="#create_board"></i>
+            </div>
+            <!-- main bucket -->
+            <div class="board" id="boardn" ng-repeat="bucket in mainbucketdisplay  | filter:mab_filter" ng-class="{hide_bucket_cls :bucket.is_hide == 1, always_on_top: ids == bucket.Id}" >
+              <span ng-if="bucket.is_hide == 1">
+                <a href="javascript:void(0)"  ng-click="show_bucket_con(bucket.Id,'fb_buckets',0);bucket.is_hide=0"> <i class="fa fa-eye" aria-haspopup="true" aria-expanded="false"></i></a>
+              </span>
+              <div class="Raga" ng-if="bucket.is_hide==0">
+                <header ng-init="show_none = 1">
+                  <ul class="nav navbar-nav"> <i ng-if="bucket.lock_status == 1" class="fa fa-lock"></i>
+                    <li class="left_header_icon">                     
+                      <i ng-if="bucket.lock_status == 0" class="fa fa-eye-slash" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>                
+                      <ul class="dropdown-menu">
+                        <li> <a href="javascript:void(0)"  ng-click="show_bucket_con(bucket.Id,'fb_buckets',1);bucket.is_hide=1" ng-show="user_role <= 2"><i class="fa fa-eye-slash"></i> Hide Bucket</a></li>
+                        <li><a tabindex="-1" href="javascript:void(0)" ng-click="always_top(bucket.Id)" ng-class="{adisabled: ids == bucket.Id}"><i class="fa fa-window-restore"></i> Always on-top</a></li>
+                        <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-sort-alpha-asc"></i> Sort Blocks</a>
+                          <ul class="dropdown-menu" ng-click="$event.stopPropagation();">
+                            <li><a tabindex="-1" href="javascript:void(0)"><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox" ng-model="due_date_sort" ng-change="block_sort(due_date_sort, low_sort, 1)"><span class="checkmark" ></span></label><span class="eye-input">Due Date</span></label>
+                            </div></a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox"  ng-model="status_sort" ng-change="block_sort(status_sort, low_sort, 2)"><span class="checkmark"></span></label><span class="eye-input">Status</span></label>
+                            </div></a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox" ng-model="owners_sort" ng-change="block_sort(owners_sort, low_sort, 3)"><span class="checkmark"></span></label><span class="eye-input">Owners</span></label>
+                            </div></a></li>
+                            <li class="divider"></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" >
+                              <div class="checkbox eye-chk">
+                                <label class="switch"><input type="checkbox" ng-model="low_sort" ><span class="slider round slider-1"></span><span class="eye-slide">Low to High</span></label>
+                              </div>
+                            </a></li>
+                          </ul>
+                        </li>
+                        <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tags"></i> Tagged Bucket</a>
+                          <ul class="dropdown-menu">
+                            <li><a tabindex="-1" data-toggle="modal" data-target=".tagModal" href="javascript:void(0)" ng-click="by_people()"><i class="fa fa-at"></i> By People...</a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".tagModal" ng-click="by_master_tag()"><i class="fa fa-hashtag"></i> By Master Tags...</a></li>
+                          </ul>
+                        </li>
+                        <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tasks"></i> Sorting Bucket</a>
+                          <ul class="dropdown-menu">
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#hoursmodal" ng-hide="true"><i class="fa fa-clock-o"></i> By Hours...</a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_people_sort()"><i class="fa fa-at"></i> By People...</a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_master_tag_sort()"><i class="fa fa-hashtag"></i> By Master Tags...</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <input type="text" class="update_bor" ng-model="bucket.Name" ng-show="show_none == 0"  value="{{bucket.Name}}" ng-blur="update_bucket(bucket.Name,bucket.Id);event=$event;show_none=1;" ng-disabled="bucket.Name=='New Bucket'">
+                  <span ng-show="show_none == 1" ng-click="show_none=0">{{bucket.Name}}</span>
+                  <div class="dropdown pull-right" >
+                    <i class="fa fa-bars" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-hide="bucket.Id == 1"></i>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <div class=" home-side">
+                        <ul class="list-group">
+                          <li class="list Board1">Bucket Operations</li>
+                          <ul class="list-group sub1">
+                            <li class="list-group-item"><i class="fa fa-share-square"></i> Move Bucket to</li>
+                            <li class="list-group-item" ng-show="user_role <= 2"><a href="javascript:void(0)" ng-click="lock_unlock_bucket(bucket.Id,'fb_buckets',1);bucket.lock_status = 1"><i class="fa fa-lock"></i> Lock Bucket</a></li>
+                            <li class="list-group-item" ng-show="user_role <= 2"><a href="javascript:void(0)" ng-click="lock_unlock_bucket(bucket.Id,'fb_buckets',0);bucket.lock_status = 0"><i class="fa fa-unlock"></i> Unlock Bucket</a></li>
+                            <li class="list-group-item" ng-show="user_role <= 2"><a href="javascript:void(0)" ng-click="delete_bucket_fun(bucket.Id,'fb_buckets','fb_blocks')";><i class="fa fa-times"></i> Delete Bucket</a></li>
+                          </ul>
+                          <li class="list Board2"> Blocks Operations</li>
+                          <ul class="list-group sub2">
+                            <li class="list-group-item"><i class="fa fa-share-square"></i> Move Blocks to</li>
+                            <li class="list-group-item" ng-show="user_role <= 2"><a href="javascript:void(0)" ng-click="mark_bucket_done(bucket.Id,'fb_blocks');"><i class="fa fa-check"></i> Mark all as Done</a></li>
+                             <li class="list-group-item" ng-show="user_role <= 2"><a href="javascript:void(0)" ng-click="archived_block_fn(bucket.Id,'fb_blocks');"><i class="fa fa-recycle"></i> Archived Blocks</a></li>
+                          </ul>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+                <ul class="cards" id="b1" dnd-list="bucket.bucket_con" dnd-disable-if="bucket.lock_status == 1 || user_role >= 2" ng-if="sort_dis === false">
+                  <li class="card" ng-repeat="blocks in bucket.bucket_con" dnd-moved="(bucket.bucket_con).splice($index, 1);drop(mainbucketdisplay,bucket.Id)" ng-show="blocks.status==1" dnd-draggable="blocks" dnd-dragstart="drag(blocks)" dnd-disable-if="bucket.lock_status == 1 || user_role >= 2">
+                    <div ng-class="{overlay_block : bucket.lock_status == 1}" ></div>
+                    <div class="card-side-left" ng-class="class" style="background-color: {{blocks.color1.color}}">
+                      <div ng-class="class_hide_show">
+                        <a href="javascript:void(0)" > <i class="fa fa-bars"></i></a>
+                        <a href="javascript:void(0)" ng-if="blocks.task_status==1" ng-click="done_block(blocks.id,0,'fb_blocks');" ng-show="user_role <= 2"><i class="fa fa-check open_div"></i></a>
+                        <a href="javascript:void(0)" ng-if="blocks.task_status==0" ng-click="done_block(blocks.id,1,'fb_blocks');" ng-show="user_role <= 2"><i class="fa fa-reply-all open_div"></i></a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target=".edit_block" ng-click="edit_blk(blocks)"> <i class="fa fa-external-link open_div" ng-show="user_role <= 2"></i></a>
+                        <a href="javascript:void(0)" ng-click="del_block(blocks.id);blocks.status=2" ng-show="user_role <= 2"> <i class="fa fa-trash open_div"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp(blocks.id);hide_notify(blocks.id,'fb_blocks',0);blocks.notify = 0"><i class="fa fa-angle-double-down"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp_hide(blocks.id)"><i class="fa fa-angle-double-up open_div"></i></a>
+                      </div>
+                    </div>
+                    <div class="card-side noselect">
+                      <p class="cardtitle "><b>{{blocks.title}}</b></p>
+                      <span ng-repeat = "showing in content">
+                        <p class="desc_height" ng-show="showing == blocks.id && !all_content">{{blocks.description}}</p>
+                      </span>
+                      <p class="desc_height" ng-if="all_content" ng-show="all_content">{{blocks.description}}</p>
+                    </div>
+                    <div class="card-side_icon">
+                      <span ng-if="blocks.active_status == 0" ng-click="active_qw(blocks.id,'fb_blocks',1);(blocks.active_status = 1 && user_role<=2)">
+                          <i  class="fa fa-star-o"></i>
+                      </span>
+                      <span ng-if="blocks.active_status == 1" ng-click="active_qw(blocks.id,'fb_blocks',0);(blocks.active_status = 0&& user_role<=2)">
+                           <i  class="fa fa-star star_yellow"></i>
+                      </span>          
+                      <i class="fa fa-info-circle" ng-show="blocks.notify == 1"></i>
+                    </div>
+                    <div class="card-date" ng-drag="flase">
+                      <span class="time" ng-class="{
+                      grey:(blocks.due_date_status == 1 && blocks.date_diff == 2),
+                      off_date :(blocks.due_date_status == 0),
+                      green_done : (blocks.due_date_status == 1 && blocks.task_status == 0),
+                      green_off : (blocks.due_date_status == 0 && blocks.task_status == 1),
+                      red_line : (blocks.due_date_status == 1 && blocks.date_diff == 1)}">{{blocks.task_deadline_date}} {{blocks.task_deadline_time}}</span>
+                      <span class="img" class="dropdown dp-style" ng-repeat="user_img in blocks.user_img">
+                        <img   ng-src="imgs/{{user_img.profile_img}}" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;" ng-show="!user_img.profile_img">
+                        <img   ng-src="imgs/img.jpg" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;" ng-show="user_img.profile_img">
+                        <ul class="dropdown-menu dp-style list-group tasked" ng-click="$event.stopPropagation();">
+                         <li class="list-group-item" ><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;"></i> <img ng-src="imgs/{{user_img.profile_img}}" height="15px" width="15px"> {{user_img.username}}</a></li>
+
+                         <li class="list-group-item" ng-repeat="user in blocks.tasked_user" > 
+                          <label class="container-chk" ng-hide="user_role >= 2">
+                            <input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean);" ng-checked="true" > 
+                            <span class="checkmark"></span>
+                          </label>
+
+                          <span ng-repeat="imo in blocks.tasked_img | limitTo:letterLimit">
+                           <img ng-src="files/{{imo.name}}" class="round_img"  height="20px" width="25px" ng-if="imo.block_id == user.id">
+                            <span ng-if='imo.block_id != user.id' class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span>
+                        
+                         </span> {{user.title}}</li>
+
+                          <li class="list-group-item" ng-repeat="user in blocks.not_user" ng-hide="user_role >= 2"> <label class="container-chk"><input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean);" ng-if="user_role <= 2"><span class="checkmark"></span></label>  <span class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span> {{user.title}}</li>
+
+                       </ul>
+                      </i></span>
+                      <div class="menu-icon">
+                        <span class="line a" ng-repeat="col in blocks.colors" style="background-color: {{col.color}}"></span>
+                      </div>
+                    </div>
+                    <div class="pull-right"></div>
+                  </li>
+                  <li class="dndPlaceholder">              
+                   </li>
+                  <div class="add" ng-show="bucket.Name=='New Bucket' && user_role <= 2"><a href="javascript:void(0)" ng-click="buckets_id(bucket.Id)" data-toggle="modal" data-target=".block_content_modal"><i class="fa fa-plus-circle"></i></a></div>
+                </ul>
+                <ul class="cards" id="b1" dnd-list="bucket.bucket_con" dnd-disable-if="bucket.lock_status == 1" ng-if="sort_dis === true">
+                  <div ng-repeat="master in query track by $index">
+                 <div style="{{master.height}}">
+                  <li class="card" ng-repeat="blocks in bucket.bucket_con" dnd-moved="(bucket.bucket_con).splice($index, 1);drop(mainbucketdisplay,bucket.Id)" ng-show="blocks.status==1 &&  (master.mas_id==blocks.tampp )" dnd-draggable="blocks" dnd-dragstart="drag(blocks)" dnd-disable-if="bucket.lock_status == 1">
+                    <div ng-class="{overlay_block : bucket.lock_status == 1}" ></div>
+                    <div class="card-side-left" ng-class="class" style="background-color: {{blocks.color1.color}}">
+                      <div ng-class="class_hide_show">
+                        <a href="javascript:void(0)" > <i class="fa fa-bars"></i></a>
+                        <a href="javascript:void(0)" ng-if="blocks.task_status==1" ng-click="done_block(blocks.id,0,'fb_blocks');" ng-show="user_role == 1"><i class="fa fa-check open_div"></i></a>
+                        <a href="javascript:void(0)" ng-if="blocks.task_status==0" ng-click="done_block(blocks.id,1,'fb_blocks');" ng-show="user_role == 1"><i class="fa fa-reply-all open_div"></i></a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target=".edit_block" ng-click="edit_blk(blocks)"> <i class="fa fa-external-link open_div" ng-show="user_role == 1"></i></a>
+                        <a href="javascript:void(0)" ng-click="del_block(blocks.id);blocks.status=2" ng-show="user_role == 1"> <i class="fa fa-trash open_div"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp(blocks.id);hide_notify(blocks.id,'fb_blocks',0);blocks.notify = 0"><i class="fa fa-angle-double-down"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp_hide(blocks.id)"><i class="fa fa-angle-double-up open_div"></i></a>
+                      </div>
+                    </div>
+                    <div class="card-side noselect">
+                      <p class="cardtitle "><b>{{blocks.title}}</b></p>
+                      <span ng-repeat = "showing in content">
+                        <p class="desc_height" ng-show="showing == blocks.id && !all_content">{{blocks.description}}</p>
+                      </span>
+                      <p class="desc_height" ng-if="all_content" ng-show="all_content">{{blocks.description}}</p>
+                    </div>
+                    <div class="card-side_icon">
+                      <span ng-if="blocks.active_status == 0" ng-click="active_qw(blocks.id,'fb_blocks',1);(blocks.active_status = 1&& user_role<=2)" >
+                          <i  class="fa fa-star-o"></i>
+                      </span>
+                      <span ng-if="blocks.active_status == 1" ng-click="active_qw(blocks.id,'fb_blocks',0);(blocks.active_status = 0&& user_role<=2)" >
+                           <i  class="fa fa-star star_yellow"></i>
+                      </span>          
+                      <i class="fa fa-info-circle" ng-show="blocks.notify == 1"></i>
+                    </div>
+                    <div class="card-date" ng-drag="flase">
+                      <span class="time" ng-class="{
+                      grey:(blocks.due_date_status == 1 && blocks.date_diff == 2),
+                      off_date :(blocks.due_date_status == 0),
+                      green_done : (blocks.due_date_status == 1 && blocks.task_status == 0),
+                      green_off : (blocks.due_date_status == 0 && blocks.task_status == 1),
+                      red_line : (blocks.due_date_status == 1 && blocks.date_diff == 1)}">{{blocks.task_deadline_date}} {{blocks.task_deadline_time}}</span>
+                      <span class="img" class="dropdown dp-style" ng-repeat="user_img in blocks.user_img">
+                        <img   ng-src="imgs/{{user_img.profile_img}}" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;" ng-show="!user_img.profile_img">
+                        <img   ng-src="imgs/img.jpg" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;" ng-show="user_img.profile_img">
+                        <ul class="dropdown-menu dp-style list-group tasked" ng-click="$event.stopPropagation();">
+                         <li class="list-group-item" ><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;"></i> <img ng-src="imgs/{{user_img.profile_img}}" height="15px" width="15px"> {{user_img.username}}</a></li>
+
+                         <li class="list-group-item" ng-repeat="user in blocks.tasked_user" > 
+                          <label class="container-chk" ng-hide="user_role >= 2">
+                            <input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean)" ng-checked="true"> 
+                            <span class="checkmark"></span>
+                          </label>
+
+                          <span ng-repeat="imo in blocks.tasked_img | limitTo:letterLimit">
+                           <img ng-src="files/{{imo.name}}" class="round_img"  height="20px" width="25px" ng-if="imo.block_id == user.id">
+                            <span ng-if='imo.block_id != user.id' class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span>
+                        
+                         </span> {{user.title}}</li>
+
+                          <li class="list-group-item" ng-repeat="user in blocks.not_user" ng-hide="user_role >= 2"> <label class="container-chk"><input type="checkbox" ng-model="boolean" ng-click="assign_user(user,blocks.id,boolean)" ng-if="user_role <= 2"><span class="checkmark" ng-if="user_role <= 2"></span></label>  <span class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span> {{user.title}}</li>
+
+                       </ul>
+                      </i></span>
+                      <div class="menu-icon">
+                        <span class="line a" ng-repeat="col in blocks.colors" style="background-color: {{col.color}}"></span>
+                      </div>
+                    </div>
+                    <div class="pull-right"></div>
+                  </li>
+                   </div>
+                   </div>
+                  <div class="add" ng-show="bucket.Name=='New Bucket'&& user_role <= 2"><a href="javascript:void(0)" ng-click="buckets_id(bucket.Id)" data-toggle="modal" data-target=".block_content_modal"><i class="fa fa-plus-circle"></i></a></div>
+                </ul>
+              </div>
+            </div>
+             <div class="board1 col-1" id="boardn" ng-show="user_role == 1">
+              <i class="fa fa-plus-circle" data-toggle="modal" data-target="#create_board"></i>
+            </div>
+          </div>
+          <!-- calender hide end -->
+          <!-- calender view -->          
+          <div id="boards" ng-show='calender_view_y'>
+            <div class="board" id="boardn" ng-repeat="results1 in sort_date_name" style="border: 1px solid;">
+              <header>
+                <ul class="nav navbar-nav">
+                  <li class="left_header_icon">
+                    <i class="fa fa-clock-o" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                  </li>
+                </ul>
+                <span>{{results1}}</span>
+                <div class="dropdown pull-right">
+                  <i class="fa fa-bars" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <div class=" home-side">
+                      <ul class="list-group ">
+                        <li class="list Board1">Bucket Operations</li>
+                        <ul class="list-group sub1">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Bucket to</li>
+                          <li class="list-group-item"><i class="fa fa-lock"></i> Lock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-unlock"></i> Unlock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-times"></i> Delete Bucket</li>
+                        </ul>
+                        <li class="list Board2"> Blocks Operations</li>
+                        <ul class="list-group sub2">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Blocks to</li>
+                          <li class="list-group-item"><i class="fa fa-check"></i> Mark all as Done</li>
+                          <li class="list-group-item"><i class="fa fa-recycle"></i> Archived Blocks</li>
+                        </ul>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <div class="cards" id="b1">
+                <div class="card" ng-repeat="results12 in sort_date_time1 track by $index" style="min-height: 72px;">                
+                  <div class="card-side">
+                    <p class="cardtitle noselect" style="padding: 10px 20px;"><b>{{results12}}</b></p>
+                  </div>         
+                </div>
+              </div>
+            </div>
+            <div class="board" id="boardn" ng-repeat="friendObj in dates">
+              <header>
+                <ul class="nav navbar-nav">
+                    <li class="left_header_icon">
+                      <i class="fa fa-eye-slash" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                      <ul class="dropdown-menu">
+                        <li> <a href="javascript:void(0)" ng-class="{adisabled: true}"><i class="fa fa-eye-slash"></i> Hide Bucket</a></li>
+                        <li><a tabindex="-1" href="javascript:void(0)" ng-click="always_top(bucket.Id)" ng-class="{adisabled: true}"><i class="fa fa-window-restore"></i> Always on-top</a></li>
+                        <!-- <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-sort-alpha-asc"></i> Sort Blocks</a>
+                          <ul class="dropdown-menu" ng-click="$event.stopPropagation();">
+                            <li><a tabindex="-1" href="javascript:void(0)"><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Due Date</span></label>
+                            </div></a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Status</span></label>
+                            </div></a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" ><div class="checkbox eye-chk">
+                              <label><label class="container-chk"><input type="checkbox"><span class="checkmark"></span></label><span class="eye-input">Owners</span></label>
+                            </div></a></li>
+                            <li class="divider"></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" >
+                              <div class="checkbox eye-chk">
+                                <label class="switch"><input type="checkbox" value="" checked><span class="slider round slider-1"></span><span class="eye-slide">Low to High</span></label>
+                              </div>
+                            </a></li>
+                          </ul>
+                        </li> -->
+                        <!-- <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" ng-class="{adisabled: true}"><i class="fa fa-tags"></i> Tagged Bucket</a>
+                          <ul class="dropdown-menu">
+                            <li><a tabindex="-1" data-toggle="modal" data-target=".tagModal" href="javascript:void(0)" ng-click="by_people()"><i class="fa fa-at"></i> By People...</a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".tagModal" ng-click="by_master_tag()"><i class="fa fa-hashtag"></i> By Master Tags...</a></li>
+                          </ul>
+                        </li> -->
+                        <li class="dropdown dropdown-submenu"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tasks"></i> Sorting Bucket</a>
+                          <ul class="dropdown-menu">
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#hoursmodal"><i class="fa fa-clock-o"></i> By Hours...</a></li>
+                           <!--  <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_people_sort()" ng-class="{adisabled: ids == bucket.Id}"><i class="fa fa-at"></i> By People...</a></li>
+                            <li><a tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target=".peoplemodal" ng-click="by_master_tag_sort()" ng-class="{adisabled: ids == bucket.Id}"><i class="fa fa-hashtag"></i> By Master Tags...</a></li> -->
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                <span>{{friendObj}}</span>
+                <div class="dropdown pull-right">
+                  <i class="fa fa-bars" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                    <div class=" home-side">
+                      <ul class="list-group">
+                        <li class="list Board1">Bucket Operations</li>
+                        <ul class="list-group sub1">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Bucket to</li>
+                          <li class="list-group-item"><i class="fa fa-lock"></i> Lock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-unlock"></i> Unlock Bucket</li>
+                          <li class="list-group-item"><i class="fa fa-times"></i> Delete Bucket</li>
+                        </ul>
+                        <li class="list Board2"> Blocks Operations</li>
+                        <ul class="list-group sub2">
+                          <li class="list-group-item"><i class="fa fa-share-square"></i> Move Blocks to</li>
+                          <li class="list-group-item"><i class="fa fa-check"></i> Mark all as Done</li>
+                          <li class="list-group-item"><i class="fa fa-recycle"></i> Archived Blocks</li>
+                        </ul>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <div class="cards" id="field0">
+                <div ng-repeat="friendObj2 in dates1">
+                  <div class="card" ng-repeat="friendObj3 in friendObj2.con" ng-if="friendObj== friendObj3.task_deadline_date" ng-show="friendObj2 != null" >
+                    <div class="card-side-left" ng-class="class" style="background-color: {{friendObj3.color1.color}}">
+                      <div ng-class="class_hide_show">
+                        <a href="javascript:void(0)" > <i class="fa fa-bars"></i></a>
+                        <a href="javascript:void(0)" ng-if="friendObj3.task_status==1" ng-click="done_block(friendObj3.id,0,'fb_blocks')"><i class="fa fa-check open_div" ng-show="user_role == 1"></i></a>
+                        <a href="javascript:void(0)" ng-if="friendObj3.task_status==0" ng-click="done_block(friendObj3.id,1,'fb_blocks')" ><i class="fa fa-reply-all open_div" ng-show="user_role == 1"></i></a>
+                        <a href="javascript:void(0)" data-toggle="modal" data-target=".edit_block" ng-click="edit_blk(friendObj3)" ng-show="user_role == 1"> <i class="fa fa-external-link open_div" ></i></a>
+                        <a href="javascript:void(0)" ng-click="del_block(friendObj3.id)" ng-show="user_role == 1"> <i class="fa fa-trash open_div"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp(friendObj3.id);hide_notify(friendObj3.id,'fb_blocks',0);"><i class="fa fa-angle-double-down"></i></a>
+                        <a href="javascript:void(0)" ng-click="disp_hide(friendObj3.id)"><i class="fa fa-angle-double-up open_div"></i></a>
+                      </div>
+                    </div>
+                    <div class="card-side">
+                      <p class="cardtitle noselect"><b>{{friendObj3.title}}</b></p>
+                      <span ng-repeat = "showing in content">
+                        <p class="desc_height" ng-show="showing == friendObj3.id && !all_content">{{friendObj3.description}}</p>
+                      </span>
+                      <p class="desc_height" ng-if="all_content" ng-show="all_content">{{friendObj3.description}}</p>
+                    </div>
+                    <div class="card-side_icon">
+                      <i ng-if="friendObj3.active_status == 0" ng-click="active_qw(friendObj3.id,'fb_blocks',1);(friendObj3.active_status = 1&& user_role<=2)" class="fa fa-star-o"></i>
+                      <i ng-if="friendObj3.active_status == 1" ng-click="active_qw(friendObj3.id,'fb_blocks',0);(friendObj3.active_status = 0&& user_role<=2)" class="fa fa-star star_yellow"></i>
+                      <i class="fa fa-info-circle" ng-show="friendObj3.notify == 1"></i>
+                    </div>
+                    <div class="card-date">
+                      <span class="time grey" ng-class="{off_date :friendObj3.due_date_status == 0,green_done : friendObj3.task_status == 0,red_line : friendObj3.date_diff == 1}">{{friendObj3.task_deadline_date}} {{friendObj3.task_deadline_time}}</span>
+                      <span class="img" class="dropdown dp-style" ng-repeat="user_img in friendObj3.user_img">
+                        <img   ng-src="imgs/{{user_img.profile_img}}" height="20px" width="25px" aria-hidden="true" data-toggle="dropdown" style="border-radius: 3px;">
+                        <ul class="dropdown-menu dp-style list-group tasked" ng-click="$event.stopPropagation();">
+                         <li class="list-group-item" ><a href="javascript:void(0)"><i class="fa fa-shield admin" style="color: #2f4773; background-color: #007eff40;"></i> <img ng-src="imgs/{{user_img.profile_img}}" height="15px" width="15px"> {{user_img.username}}</a></li>
+
+                         <li class="list-group-item" ng-repeat="user in friendObj3.tasked_user" > 
+                          <label class="container-chk" ng-hide="user_role >= 2">
+                            <input type="checkbox" ng-model="boolean" ng-click="assign_user(user,friendObj3.id,boolean)" ng-checked="true"> 
+                            <span class="checkmark"></span>
+                          </label>
+
+                          <span ng-repeat="imo in friendObj3.tasked_img | limitTo:letterLimit">
+                           <img ng-src="files/{{imo.name}}" class="round_img"  height="20px" width="25px" ng-if="imo.block_id == user.id">
+                            <span ng-if='imo.block_id != user.id' class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span>
+                        
+                         </span> {{user.title}}</li>
+
+                          <li class="list-group-item" ng-repeat="user in friendObj3.not_user" ng-hide="user_role >= 2"> <label class="container-chk"><input type="checkbox" ng-model="boolean" ng-click="assign_user(user,friendObj3.id,boolean)" ng-if="user_role <= 2"><span class="checkmark"></span></label>  <span class="profile_text" ng-class-odd="'odd'" ng-class-even="'even'" >{{user.title | limitTo:letterLimit | uppercase }}</span> {{user.title}}</li>
+
+                       </ul>
+                      </i></span>
+                      <div class="menu-icon">
+                        <span class="line a" ng-repeat="col in friendObj3.colors" style="background-color: {{col.color}}"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pull-right"></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+            </div>
+          </div>
+        </div>
+        <!-- calender view -->
+      </div>
+    </div>
+    
+</div>

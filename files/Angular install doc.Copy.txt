@@ -1,0 +1,15 @@
+first install node.js
+then open cmd type: npm install
+then : npm install -g @angular/cli 
+then select install folder type: ng new project name
+then : cd project name 
+
+
+for run
+cmd: ng serve --host 0.0.0.0 --port 3000
+
+for page create 
+cmd: ng g c file name
+
+
+ng build --prod

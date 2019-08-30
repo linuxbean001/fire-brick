@@ -1,0 +1,30 @@
+var app = angular.module("myApp", ['ngRoute','ngSanitize','selectize','ngMaterial', 'ngMessages','dndLists','ngDraggable']);
+
+app.config(function($routeProvider) {
+    $routeProvider 
+   
+    .when("/Boards", {
+        templateUrl : "view/boards/boards.html"
+    })
+    .when("/PersonBlocks", {
+        templateUrl : "view/ManagemetBoards/personBlock.html"
+    })
+    .when("/TagBlocks", {
+        templateUrl : "view/ManagemetBoards/tagBlocks.html"
+    })
+    .when("/ArchivedBlocks", {
+        templateUrl : "view/ManagemetBoards/ArchivedBlocks.html"
+    })
+    .when("/register", {
+        templateUrl : "view/login_Register/register.html"
+    })
+    .when("/login", {
+        templateUrl : "view/login_Register/login.html"
+    }); 
+});
+
+/* app.directive("Header", function() {
+        return {
+            template : " <!-- header start --> <div class='container-fluid main'> <div class='row'> <div class='col-md-5 form-group'> <div class='input-group'> <span class='input-group-addon buck'><i class='fa fa-unlock-alt icon-b buck-size'></i></span> <input id='bucket' type='text' class='form-control' name='bucket' placeholder='Bookme.io'> </div> </div> <div class='col-md-7 form-group'> <div class='form-inline right'> <div class='form-control view col-xs-4 form-group'> <div class='form-group icon'> <a href='javascript:void(0)' ng-click='contract_view()' ng-class='{icon_color: !contra}'><i class='fa fa-th border icon-b' ></i></a> <a href='javascript:void(0)' ng-click='expanded_view()' ng-class='{icon_color: !exp}'><i class='fa fa-th-large border icon-b'></i></a> <a href='javascript:void(0)' ng-class='{adisabled: !usable , icon_color: !cal}' ng-click='doOperation($event);'><i class='fa fa-calendar border icon-b'></i></a> <a href='javascript:void(0)' ng-class='{icon_color: !rmv_cal}' ng-click='remove_calender_view()' ><i class='fa fa-bars border icon-b'></i></a> </div> <div class='vl'></div> <div class='form-group icon'> <a href='javascript:void(0)' ng-click='toggle=!toggle' ng-class='toggle ? icon_color : icon-b '><i class='fa fa-filter border icon-b'></i></a> </div> </div> <div class='form-control save col-xs-2 form-group'> <a href='#'><i class='fa fa-save icon-b'></i></a> <a href='#'><i class='fa fa-share icon-b'></i></a> </div> <div class='form-control user col-xs-3 form-group'> <a href='#'><i class='fa fa-user-secret icon-b'></i></a> <label>Hi, <span>{{username1}}</span></label> </div> <div class='form-control menu col-xs-3 form-group'> <a href='javascript:void(0)' data-toggle='dropdown'><i class='fa fa-user-circle icon-b'></i></a> <ul class='dropdown-menu dp-style' ng-init='user_list_data();'> <li ng-repeat='user in users'><a href='javascript:void(0)'><i class='fa fa-shield admin'></i> <i class='fa fa-user'></i>{{user.username}}</a></li> </ul> <a href='#'><i class='fa fa-cog icon-b'></i></a> <a href='#'><i class='fa fa-trash icon-b'></i></a> </div> </div> </div> </div> <div class='row spacer' ng-show='toggle'> <div class='col-md-4 tag_field'> <div class='form-control hash-icon'> <a href='#'><i class='fa fa-hashtag'></i></a> </div> <div class='hash-main'> <button class='btn dropdown-toggle action_btn' data-toggle='dropdown'> <span ng-repeat='role1 in selection' class='tag label label-info'>{{role1}}</span> </button> <ul class='dropdown-menu dropdown-menu-form' ng-click='$event.stopPropagation();' > <form> <div class='col-md-4 pull-left'><label># Master Tags</label> <ul class='list-group' ng-repeat='tag in customerbucketdisplay1'> <li class='list-group-item a'>{{tag.Name}}</li> <span ng-repeat='role in tag.bucket_con'> <li class='list-group-item a'><label class='container-chk'><input type='checkbox' name='chk[]' ng-checked='selection.indexOf(role.title) > -1' ng-click='toggleSelection(role.title)' value='{{role.title}}'><span class='checkmark'></span></label><span class='chk-role'>#{{role.title}}</span></li> </span> </ul> </div> <div class='col-md-4 pull-left' ><label>@ People</label> <ul class='list-group' ng-repeat='tag in archivedbucketdisplay1'> <li class='list-group-item a' >{{tag.Name}}</li> <span ng-repeat='role in tag.bucket_con'> <li class='list-group-item a'><label class='container-chk'><input type='checkbox' name='chk[]' ng-checked='selection.indexOf(role.title) > -1' ng-click='toggleSelection(role.title)' value='{{role.title}}'><span class='checkmark'></span></label><span class='chk-role'>@{{role.title}}</span></li> </span> </ul> </div> <div class='col-md-4 pull-left'> <ul class='list-group'><label># Meta Tags</label> <span ng-repeat='role in metabucketdisplay'> <li class='list-group-item a'><label class='container-chk'><input type='checkbox' name='chk[]' ng-checked='selection.indexOf(role.Name) > -1' ng-click='toggleSelection(role.Name)' value='{{role.Name}}'><span class='checkmark'></span></label><span class='chk-role'>{{role.Name}}</span></li> </span> </ul> </div> </form> </ul> </div> </div> <div class='col-md-3'> <div class='input-group input-group-unstyled'> <i class='fa fa-book icon-b icon_b'></i> <select class='form-control' id='sel1' ng-model='bucket_value' ng-change='bucket_filter()'> <option value='1'>Date Buckets</option> <option value='2' selected>Phase Buckets</option> <option value='3'>Date Buckets: Due only</option> <option value='4'>Date Buckets: All in range</option> </select> </div> </div> <div class='col-md-3 col-xs-6 date-in'> <div class='date'> <span><i class='fa fa-calendar cal-d'></i></span> <input type='text' ng-model='from_date' class='form-control cal-input' id='datetimepicker1' /> </div> <div class='date'> <span><i class='fa fa-arrow-right cal-d'></i></span> <input type='text' ng-model='to_date' class='form-control cal-input' id='datetimepicker2'/> </div> </div> <div class='col-md-2 col-xs-6 ' > <div class='form-group has-feedback'> <input type='text' class='form-control' id='inputSuccess2'/> <i id='filtersubmit' class='fa fa-search'></i> </div> </div> </div> </div> <!-- header stop -->"
+        };
+    });*/
